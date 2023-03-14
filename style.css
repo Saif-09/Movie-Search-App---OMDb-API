@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+
+/* By using :root, the styles defined within the selector will apply globally  */
+:root {
+    /* These variables can then be used throughout the rest of the CSS stylesheet by referencing their respective variable names, allowing for easy color scheme changes and consistency throughout the design. */
+    --md-dark-color: #1d1d1d;
+    --dark-color: #171717;
+    --light-dark-color: #292929;
+    --yellow-color: #d4aa11;
+}
+
+/*Universal Selector*/
+*{
+    padding:0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+a{
+    text-decoration: none;
+}
+
+img{
+    
+    width:100%;
+    display:block;
+}
+
+
+/* logo section */
+.wrapper{
+    min-height:100vh;
+    background-color: var(--dark-color);
+}
+
+.wrapper .container{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* search container */
+.search-container{
+    background-color: var(--md-dark-color);
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content:  center;
+}
