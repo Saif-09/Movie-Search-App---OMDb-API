@@ -293,6 +293,23 @@ img{
         margin-left: 0;
     }
 }
+footer {
+    background-color: var(--light-dark-color);
+    padding: 20px;
+    user-select: none;
+    text-align: center;
+    text-transform: uppercase;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  footer p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--yellow-color);
+  }
+  
 
 /* top rated movies container
 .container h2 {

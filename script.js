@@ -163,4 +163,4 @@ $(document).click(function(event) {
 
 // // Call getTopRatedMovies function
 // getTopRatedMovies();
-    }
+    
