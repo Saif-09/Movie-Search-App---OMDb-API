@@ -1,8 +1,6 @@
-
-
-const movieSearchBox = document.getElementById('movie-search-box');
-const searchList = document.getElementById('search-list');
-const resultGrid = document.getElementById('result-grid');
+const movieSearchBox = $('#movie-search-box');
+const searchList = $('#search-list');
+const resultGrid = $('#result-grid');
 
 //Loading Movie details using API
 async function loadMovies(searchTerm) {
@@ -14,63 +12,51 @@ async function loadMovies(searchTerm) {
 
 // Helps to search movies
 function findMovies() {
-    let searchTerm = (movieSearchBox.value).trim();
-    // console.log(searchTerm);
+    let searchTerm = (movieSearchBox.val()).trim();
     if (searchTerm.length > 0) {
-        searchList.classList.remove('hide-search-list');
+        searchList.removeClass('hide-search-list');
         loadMovies(searchTerm);
+    } else {
+        searchList.addClass('hide-search-list');
     }
-    else {
-        searchList.classList.add('hide-search-list');
-    }
-
 }
 
 //Render Movie details
 function displayMovieList(movies) {
-    searchList.innerHTML = "";
+    searchList.html("");
     for (let i = 0; i < movies.length; i++) {
-        let movieListItem = document.createElement('div');
-        movieListItem.dataset.id = movies[i].imdbID;
-        movieListItem.classList.add('search-list-item');
-        if (movies[i].Poster != "N/A") {
-            moviePoster = movies[i].Poster;
-        }
-        else {
-            moviePoster = "no-img.jpg";
-        }
-        movieListItem.innerHTML = `<div class="search-item-thumbnail">
+        let movieListItem = $('<div></div>');
+        movieListItem.attr('data-id', movies[i].imdbID);
+        movieListItem.addClass('search-list-item');
+        let moviePoster = (movies[i].Poster != "N/A") ? movies[i].Poster : "no-img.jpg";
+        movieListItem.html(`<div class="search-item-thumbnail">
         <img src="${moviePoster}" alt="">
         </div>
         <div class="search-item-info">
         <h3> ${movies[i].Title}</h3>
         <p>${movies[i].Year}</p>
-        </div>`;
-        searchList.appendChild(movieListItem);
-
+        </div>`);
+        searchList.append(movieListItem);
     }
     loadMovieDetails();
 }
 
 //Load Movie Details by Fetching data from API
 function loadMovieDetails() {
-    const searchListMovies = searchList.querySelectorAll('.search-list-item');
-    searchListMovies.forEach(movie => {
-        // console.log(movie);
-        movie.addEventListener('click', async () => {
-            searchList.classList.add('hide-search-list');
-            movieSearchBox.value = "";
-            const result = await fetch(`https://www.omdbapi.com/?i=${movie.dataset.id}&apikey=9f0decb8`);
+    const searchListMovies = searchList.find('.search-list-item');
+    searchListMovies.each(function() {
+        $(this).click(async function() {
+            searchList.addClass('hide-search-list');
+            movieSearchBox.val("");
+            const result = await fetch(`https://www.omdbapi.com/?i=${$(this).data('id')}&apikey=9f0decb8`);
             const movieDetails = await result.json();
-            // console.log(movieDetails);
             displayMovieDetails(movieDetails);
         });
-
     });
 }
 
 function displayMovieDetails(details) {
-    resultGrid.innerHTML = `<div class="movie-poster">
+    resultGrid.html(`<div class="movie-poster">
     <img src="${(details.Poster!="N/A")? details.Poster : "no-img" }" alt="movie poster">
 
     </div>
@@ -87,12 +73,94 @@ function displayMovieDetails(details) {
     <p class="plot"><strong>Plot: </strong>${details.Plot}</p>
     <p class="language"><strong>Language: </strong>${details.Language}</p>
     <p class="awards"><strong><i class = "fas fa-award"></i></strong> ${details.Awards}</p>
-</div>`;
+</div>`);
 }
 
-window.addEventListener('click', (event)=>{
-    if(event.target.className != "form-control"){
-        searchList.classList.add('hide-search-list');
+$(document).click(function(event) {
+    if (event.target.className != "form-control") {
+        searchList.addClass('hide-search-list');
     }
 });
 
+
+
+
+// var movie_poster = [];
+//         function search(variable_from_html_search, i){
+//         var url = 'http://www.omdbapi.com/?apikey=9f0decb&s=*'+variable_from_html_search+'*&page='+i;
+//         fetch(url).then(function(resp){
+//             return resp.json()
+//         })
+//         .then(function(data){
+//             var num = data.Search.length; //to get the length of response, sometimes its less than 10
+//             for(var j=0; j < num; j++){         
+//             movie_poster.push(data.Search[j]);
+//             }
+//             return movie_poster;    
+//         });
+//         return movie_poster;
+//     };
+
+// //loop through search.
+//     function movie_list(variable_from_html_search){
+//         var variable_from_html_search = document.getElementById("search").value;
+
+//         for(var i=0; i < 10; i++){
+//             movie_poster = search(variable_from_html_search,i);
+//         }
+//  //movie_poster now has top 100 list and you can use it anywhere, remember to use JSON.stringify()
+
+// // OMDB API URL
+// const omdbUrl = "https://www.omdbapi.com/";
+
+// // API Key
+// const apiKey = "9f0decb8";
+
+// // Top Rated Movies
+// const topRatedMoviesUrl = `${omdbUrl}?apikey=${apiKey}&s=&type=movie&r=json&y=&plot=short&tomatoes=false&page=1&sort_by=imdb_rating`;
+
+// // Get Top Rated Movies
+// const getTopRatedMovies = async () => {
+//     try {
+//         const response = await fetch(topRatedMoviesUrl);
+//         const data = await response.json();
+
+//         if (data.Response === "True") {
+//             const topRatedContainer = document.querySelector("#top-rated-container");
+
+//             data.Search.forEach((movie) => {
+//                 const topRatedItem = document.createElement("div");
+//                 topRatedItem.classList.add("top-rated-item");
+
+//                 const topRatedItemImage = document.createElement("img");
+//                 topRatedItemImage.src = movie_poster === "N/A" ? "no-image.png" : movie_poster;
+//                 topRatedItemImage.alt = movie.Title;
+
+//                 const topRatedItemInfo = document.createElement("div");
+//                 topRatedItemInfo.classList.add("top-rated-item-info");
+
+//                 const topRatedItemTitle = document.createElement("h3");
+//                 topRatedItemTitle.textContent = movie.Title;
+
+//                 const topRatedItemYear = document.createElement("p");
+//                 topRatedItemYear.textContent = movie.Year;
+
+//                 topRatedItemInfo.appendChild(topRatedItemTitle);
+//                 topRatedItemInfo.appendChild(topRatedItemYear);
+
+//                 topRatedItem.appendChild(topRatedItemImage);
+//                 topRatedItem.appendChild(topRatedItemInfo);
+
+//                 topRatedContainer.appendChild(topRatedItem);
+//             });
+//         } else {
+//             console.log(data.Error);
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
+
+// // Call getTopRatedMovies function
+// getTopRatedMovies();
+    }
